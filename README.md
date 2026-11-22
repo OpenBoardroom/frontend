@@ -33,11 +33,12 @@ Anyone with write access to the repo can open a same-repo PR whose code runs in 
 
 ## License
 
-| Paths                                            | License                                       | Text                                       |
-| ------------------------------------------------ | --------------------------------------------- | ------------------------------------------ |
-| Code: everything not listed below                | AGPL-3.0-only                                 | [`LICENSE`](LICENSE)                       |
-| Docs: `docs/plans/`                              | CC BY 4.0                                     | [`LICENSE-docs`](LICENSE-docs)             |
-| Platform content: `app/content/`, `docs/design/` | CC BY-NC-SA 4.0 plus an additional permission | [`LICENSE-content.md`](LICENSE-content.md) |
+| Paths                                                                                                                                   | License                                            | Text                                       |
+| --------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------- | ------------------------------------------ |
+| Code: everything not listed in another row                                                                                              | AGPL-3.0-only                                      | [`LICENSE`](LICENSE)                       |
+| Docs: `docs/plans/`, `README.md`, `CLAUDE.md`                                                                                           | CC BY 4.0                                          | [`LICENSE-docs`](LICENSE-docs)             |
+| Brand assets: `public/favicon.svg`, `public/favicon.png`, `public/og.png`, any apple-touch icon in `public/`, `app/components/Logo.tsx` | Not licensed; all rights reserved by Boardroom LLC | —                                          |
+| Platform content: `app/content/`, `docs/design/`                                                                                        | CC BY-NC-SA 4.0 plus an additional permission      | [`LICENSE-content.md`](LICENSE-content.md) |
 
 See [ADR-0002](https://github.com/OpenBoardroom/architecture/blob/main/docs/adr/0002-licensing.md) and the [licensing spec](https://github.com/OpenBoardroom/architecture/blob/main/docs/specs/2026-11-20-licensing-design.md).
 

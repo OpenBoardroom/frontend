@@ -324,7 +324,7 @@ export const EXAMPLES: Example[] = [
       },
     },
     community: {
-      poll: { support: 58, oppose: 27, unsure: 15 },
+      poll: { support: 41, oppose: 46, unsure: 13 },
       comments: [
         {
           author: "example_reader_1",

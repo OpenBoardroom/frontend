@@ -205,6 +205,11 @@ describe("EXAMPLES", () => {
     }
   });
 
+  test("the Alphabet Proposal 9 example poll is 41/46/13", () => {
+    const p9 = EXAMPLES.find((e) => e.id === "alphabet-2024-p9");
+    expect(p9?.community.poll).toEqual({ support: 41, oppose: 46, unsure: 13 });
+  });
+
   test("each example links its proxy statement and vote results", () => {
     for (const e of EXAMPLES) {
       expect(e.sources.length).toBeGreaterThanOrEqual(2);

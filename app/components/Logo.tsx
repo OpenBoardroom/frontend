@@ -1,3 +1,4 @@
+// Not licensed; all rights reserved by Boardroom LLC.
 // The open-door logo, inlined from brand/logo-open.svg (also public/favicon.svg).
 // Fills come from the palette so no color literal lives outside :root.
 export function Logo({ size = 40 }: { size?: number }) {
