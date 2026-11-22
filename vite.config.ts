@@ -9,6 +9,15 @@ export default defineConfig({
     tailwindcss(),
     reactRouter(),
   ],
+  // Local `pnpm preview` only: lets curl forge Host headers to test redirects.
+  preview: {
+    allowedHosts: [
+      ".openboardroom.org",
+      ".openboardroom.io",
+      ".brdrmr.org",
+      ".brdrmr.com",
+    ],
+  },
   resolve: {
     tsconfigPaths: true,
   },

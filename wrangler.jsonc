@@ -8,7 +8,15 @@
   "observability": {
     "enabled": true
   },
-  "vars": {
-    "VALUE_FROM_CLOUDFLARE": "Hello from Cloudflare"
-  }
+  "routes": [
+    // brdrmr.org and www.brdrmr.org are deliberately not attached yet: they
+    // carry live email DNS and are attached in a later, staged step
+    // (architecture spec §5 and §10).
+    { "pattern": "openboardroom.org", "custom_domain": true },
+    { "pattern": "www.openboardroom.org", "custom_domain": true },
+    { "pattern": "openboardroom.io", "custom_domain": true },
+    { "pattern": "www.openboardroom.io", "custom_domain": true },
+    { "pattern": "brdrmr.com", "custom_domain": true },
+    { "pattern": "www.brdrmr.com", "custom_domain": true }
+  ]
 }
