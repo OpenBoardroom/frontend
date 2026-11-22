@@ -29,7 +29,7 @@ const json = (body: unknown, status = 200) =>
 const routed = (url: string) =>
   json(url.includes("/frontend/") ? frontendFixture : backendFixture);
 
-afterEach(() => vi.useRealTimers());
+afterEach(() => vi.restoreAllMocks());
 
 function commitsOf(feed: CommitFeed) {
   if (feed.status !== "ok") throw new Error("expected ok");
@@ -86,6 +86,14 @@ describe("fetchRecentCommits", () => {
     );
   });
 
+  it("defaults the timeout to 3000 ms", async () => {
+    const spy = vi.spyOn(AbortSignal, "timeout");
+    const { fn } = stub(routed);
+    await fetchRecentCommits({ fetch: fn });
+    expect(spy).toHaveBeenCalledWith(3000);
+    spy.mockRestore();
+  });
+
   it("uses apiBase when given", async () => {
     const { fn, calls } = stub(routed);
     await fetchRecentCommits({ fetch: fn, apiBase: "http://localhost:8788" });
@@ -104,27 +112,56 @@ describe("fetchRecentCommits", () => {
   });
 
   it("drops invalid items without throwing", async () => {
-    const { fn } = stub(() =>
+    const sha = "a".repeat(40);
+    const good = (repo: string) => ({
+      sha,
+      html_url: `https://github.com/OpenBoardroom/${repo}/commit/${sha}`,
+      commit: { message: "m", committer: { date: "2026-11-21T00:00:00Z" } },
+    });
+    const commit = {
+      message: "m",
+      committer: { date: "2026-11-21T00:00:00Z" },
+    };
+    const { fn } = stub((url) =>
       json([
         null,
         "x",
         { sha: 1 },
-        { sha: "a", html_url: "u", commit: null },
-        { sha: "a", html_url: "u", commit: { message: "m", committer: null } },
+        { ...good("frontend"), html_url: "javascript:alert(1)" },
         {
-          sha: "a",
-          html_url: "u",
-          commit: { message: "m", committer: { date: "nope" } },
+          ...good("frontend"),
+          html_url: `https://evil.example/OpenBoardroom/frontend/commit/${sha}`,
         },
         {
-          sha: "ok",
-          html_url: "https://x",
-          commit: { message: "m", committer: { date: "2026-11-21T00:00:00Z" } },
+          ...good("frontend"),
+          html_url: `https://github.com/OpenBoardroom/other/commit/${sha}`,
         },
+        {
+          ...good("frontend"),
+          html_url: `https://github.com/OpenBoardroom/frontend/commit/${"b".repeat(40)}`,
+        },
+        {
+          ...good("frontend"),
+          sha: "abc123",
+          html_url: "https://github.com/OpenBoardroom/frontend/commit/abc123",
+        },
+        {
+          ...good("frontend"),
+          sha: "A".repeat(40),
+          html_url: `https://github.com/OpenBoardroom/frontend/commit/${"A".repeat(40)}`,
+        },
+        { ...good("frontend"), commit: null },
+        { ...good("frontend"), commit: { message: "m", committer: null } },
+        {
+          ...good("frontend"),
+          commit: { ...commit, committer: { date: "nope" } },
+        },
+        good(url.includes("/frontend/") ? "frontend" : "backend"),
       ]),
     );
-    const commits = commitsOf(await fetchRecentCommits({ fetch: fn }));
-    expect(commits.map((c) => c.sha)).toEqual(["ok", "ok"]);
+    const feed = commitsOf(await fetchRecentCommits({ fetch: fn }));
+    expect(feed).toHaveLength(2);
+    expect(feed.map((c) => c.repo).sort()).toEqual(["backend", "frontend"]);
   });
 
   describe("all repos failing gives unavailable", () => {
@@ -150,17 +187,16 @@ describe("fetchRecentCommits", () => {
       });
     }
 
-    it("a request that never resolves is aborted at 3 s", async () => {
-      vi.useFakeTimers();
+    it("a request that never resolves is aborted by the timeout", async () => {
       const fn = ((_: RequestInfo | URL, init?: RequestInit) =>
         new Promise<Response>((_res, rej) => {
           init?.signal?.addEventListener("abort", () =>
             rej(init.signal?.reason),
           );
         })) as typeof fetch;
-      const pending = fetchRecentCommits({ fetch: fn });
-      await vi.advanceTimersByTimeAsync(3000);
-      expect(await pending).toEqual({ status: "unavailable" });
+      expect(await fetchRecentCommits({ fetch: fn, timeoutMs: 20 })).toEqual({
+        status: "unavailable",
+      });
     });
   });
 });

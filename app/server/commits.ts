@@ -17,6 +17,7 @@ const ORG = "OpenBoardroom";
 const PER_PAGE = 5;
 const TIMEOUT_MS = 3000;
 const CACHE_TTL_SECONDS = 300;
+const SHA_PATTERN = /^[0-9a-f]{40}$/;
 
 type Repo = (typeof FEED_REPOS)[number];
 
@@ -28,8 +29,10 @@ function isRecord(v: unknown): v is Record<string, unknown> {
 function parseCommit(repo: Repo, item: unknown): Commit | null {
   if (!isRecord(item)) return null;
   const { sha, html_url: url, commit } = item;
-  if (typeof sha !== "string" || typeof url !== "string" || !isRecord(commit))
+  if (typeof sha !== "string" || !SHA_PATTERN.test(sha) || !isRecord(commit))
     return null;
+  // Single trust boundary: the URL ends up in an href, so accept only the exact commit URL.
+  if (url !== `https://github.com/${ORG}/${repo}/commit/${sha}`) return null;
   const { message, committer } = commit;
   if (typeof message !== "string" || !isRecord(committer)) return null;
   const date = committer.date;
@@ -39,7 +42,12 @@ function parseCommit(repo: Repo, item: unknown): Commit | null {
 
 async function fetchRepo(
   repo: Repo,
-  opts: { fetch: typeof fetch; token?: string; apiBase: string },
+  opts: {
+    fetch: typeof fetch;
+    token?: string;
+    apiBase: string;
+    timeoutMs: number;
+  },
 ): Promise<Commit[]> {
   const headers: Record<string, string> = {
     accept: "application/vnd.github+json",
@@ -50,7 +58,7 @@ async function fetchRepo(
     `${opts.apiBase}/repos/${ORG}/${repo}/commits?per_page=${PER_PAGE}`,
     {
       headers,
-      signal: AbortSignal.timeout(TIMEOUT_MS),
+      signal: AbortSignal.timeout(opts.timeoutMs),
       // Workers-only option: cache GitHub's answer at the edge to stay under its rate limit.
       cf: { cacheTtl: CACHE_TTL_SECONDS, cacheEverything: true },
     } as RequestInit<RequestInitCfProperties>,
@@ -68,11 +76,22 @@ export async function fetchRecentCommits(opts: {
   /** Defaults to GITHUB_API; set only by the e2e fixture. */
   apiBase?: string;
   limit?: number;
+  /** Per-request timeout; defaults to 3000. Exists so tests can run fast. */
+  timeoutMs?: number;
 }): Promise<CommitFeed> {
-  const { limit = PER_PAGE, apiBase = GITHUB_API } = opts;
+  const {
+    limit = PER_PAGE,
+    apiBase = GITHUB_API,
+    timeoutMs = TIMEOUT_MS,
+  } = opts;
   const results = await Promise.allSettled(
     FEED_REPOS.map((repo) =>
-      fetchRepo(repo, { fetch: opts.fetch, token: opts.token, apiBase }),
+      fetchRepo(repo, {
+        fetch: opts.fetch,
+        token: opts.token,
+        apiBase,
+        timeoutMs,
+      }),
     ),
   );
   const commits = results
