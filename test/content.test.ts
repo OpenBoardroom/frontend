@@ -1,6 +1,10 @@
 import { describe, expect, test } from "vitest";
 import { ABOUT, type Block, type Inline } from "../app/content/about";
-import { EXAMPLES, EXAMPLES_FINE_PRINT } from "../app/content/examples";
+import {
+  EXAMPLE_NOTES,
+  EXAMPLES,
+  EXAMPLES_FINE_PRINT,
+} from "../app/content/examples";
 import { MILESTONES } from "../app/content/milestones";
 
 function inlineText(part: Inline): string {
@@ -61,6 +65,21 @@ describe("ABOUT", () => {
     }
   });
 
+  test("tense rule covers all exported content, notes included", () => {
+    const everything = JSON.stringify([
+      ABOUT,
+      EXAMPLES,
+      EXAMPLES_FINE_PRINT,
+      EXAMPLE_NOTES,
+      MILESTONES,
+    ]);
+    expect(everything).not.toContain("An AI model drafts");
+    expect(everything).not.toContain("a person reviews");
+    expect(JSON.stringify(EXAMPLE_NOTES.arguments)).toContain(
+      "An AI model will draft these summaries from the filing; a person will review each one before it's published.",
+    );
+  });
+
   test("the tense edits keep the rest of each sentence intact", () => {
     expect(ABOUT_TEXT).toContain(
       "An AI model will draft these summaries from the filing, and a person will review each one before it's published.",
@@ -80,7 +99,34 @@ describe("ABOUT", () => {
       ...inlineLinks(),
     ];
     expect(urls.length).toBeGreaterThan(10);
-    for (const url of urls) expect(url).toMatch(/^https:\/\//);
+    const nonHttps = urls.filter((url) => !url.startsWith("https://"));
+    expect(nonHttps).toEqual(["mailto:contact@openboardroom.org"]);
+  });
+
+  test("every [n] marker in the text has a source with that n", () => {
+    const markers = [...ABOUT_TEXT.matchAll(/\[(\d+)\]/g)].map((m) =>
+      Number(m[1]),
+    );
+    expect(markers).toEqual(expect.arrayContaining([1, 2, 3, 4]));
+    for (const n of markers) {
+      expect(ABOUT.sources.some((s) => s.n === n)).toBe(true);
+    }
+  });
+
+  test("no target-date fund example (2026-11-22 copy change)", () => {
+    expect(ABOUT_TEXT).not.toContain("target-date");
+    expect(ABOUT_TEXT).toContain(
+      "If you have a retirement account invested in an S&P 500 index fund, like the Vanguard 500 Index Fund or BlackRock's iShares IVV, that fund has been casting votes",
+    );
+  });
+
+  test("italic and link parts carry text", () => {
+    const parts = ABOUT.sections.flatMap((section) =>
+      section.blocks.flatMap((block) =>
+        block.kind === "p" ? block.parts : block.items.flat(),
+      ),
+    );
+    expect(parts).toContainEqual({ text: "(Coming later.)", em: true });
   });
 
   test("sources are numbered and non-empty", () => {
@@ -156,6 +202,43 @@ describe("EXAMPLES", () => {
     for (const e of EXAMPLES) {
       expect(e.sources.length).toBeGreaterThanOrEqual(2);
     }
+  });
+
+  test("the Vanguard 500 holder carries its share counts", () => {
+    const shares = EXAMPLES.map(
+      (e) =>
+        e.holders.find((h) => h.name === "Vanguard 500 Index Fund")?.shares,
+    );
+    expect(shares).toEqual([149_007_854, 330_076_468, 149_007_854]);
+  });
+
+  test("comments carry stances in supports, opposes, unsure order", () => {
+    for (const e of EXAMPLES) {
+      expect(e.community.comments.map((c) => c.stance)).toEqual([
+        "supports",
+        "opposes",
+        "unsure",
+      ]);
+    }
+  });
+
+  test("notes: estimates are labeled and shared notes are present", () => {
+    const [p14, apple, p9] = EXAMPLES;
+    expect(p14?.notes.distribution.join(" ")).toContain(
+      "The 36% is an estimate, shown as one. Vote reports give totals, not each holder's vote.",
+    );
+    expect(p9?.notes.distribution.join(" ")).toContain(
+      "The 77% is an estimate, shown as one.",
+    );
+    expect(apple?.notes.distribution.join(" ")).toContain(
+      "three days before the record date",
+    );
+    expect(apple?.notes.facts).toContain(
+      "When a filing doesn't state something, we say so rather than guess.",
+    );
+    expect(EXAMPLE_NOTES.community).toContain(
+      "Coming later. Example content, not real users.",
+    );
   });
 
   test("fine print", () => {

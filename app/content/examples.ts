@@ -4,11 +4,23 @@
 // the draft won. Community content is invented and must be shown with the
 // label in EXAMPLES_FINE_PRINT.
 
+import {
+  ALPHABET_8K,
+  ALPHABET_PROXY,
+  APPLE_8K,
+  APPLE_PROXY,
+  VANGUARD_NPORT_2021,
+  VANGUARD_NPX_2022,
+  VANGUARD_NPX_2024,
+} from "./sources";
+
 export type Holder = {
   name: string;
   pct: number;
   vote?: "For" | "Against" | "Abstain";
   voteNote?: string;
+  /** Shares held, where a filing gives a count (fund holdings). */
+  shares?: number;
   parent?: string;
 };
 export type Argument = { by: string; points: string[] };
@@ -40,32 +52,43 @@ export type Example = {
   arguments: { for: Argument; against: Argument };
   community: {
     poll: { support: number; oppose: number; unsure: number };
-    comments: { author: string; text: string }[];
+    comments: {
+      author: string;
+      stance: "supports" | "opposes" | "unsure";
+      text: string;
+    }[];
   };
+  /** Side notes beside the facts and the vote distribution; shared ones are in EXAMPLE_NOTES. */
+  notes: { facts: string[]; distribution: string[] };
   sources: { label: string; href: string }[];
 };
 
-const ALPHABET_PROXY =
-  "https://www.sec.gov/Archives/edgar/data/1652044/000130817924000612/lgoog2024_def14a.htm";
-const ALPHABET_8K =
-  "https://www.sec.gov/Archives/edgar/data/1652044/000119312524160721/d805807d8k.htm";
-const APPLE_PROXY =
-  "https://www.sec.gov/Archives/edgar/data/320193/000119312522003583/d222670ddef14a.htm";
-const APPLE_8K =
-  "https://www.sec.gov/Archives/edgar/data/320193/000119312522066169/d294699d8k.htm";
-const VANGUARD_NPX_2024 =
-  "https://www.sec.gov/Archives/edgar/data/36405/000110465924094482/0001104659-24-094482-index.html";
-const VANGUARD_NPX_2022 =
-  "https://www.sec.gov/Archives/edgar/data/36405/000110465922094602/tm2221142d1_npx.txt";
-const VANGUARD_NPORT_2021 =
-  "https://www.sec.gov/Archives/edgar/data/36405/000175272422053926/primary_doc.xml";
-
 const ALPHABET_STANDARD =
   "A majority of the voting power present votes for it (Class A: 1 vote per share; Class B: 10)";
-const OTHER_VANGUARD =
-  "Other Vanguard funds each report their own votes; not shown in this example";
+const OTHER_VANGUARD = "Each reports its own votes; not shown in this example";
 const BLACKROCK_NOTE = "Reported on Form N-PX; not shown in this example";
-const INDIVIDUAL_NOTE = "Individual; vote not disclosed";
+const INDIVIDUAL_NOTE = "Individuals; votes not disclosed";
+
+const FACTS_NOTE =
+  "Taken directly from the company's filings. Every fact links to the document it came from.";
+const RESULT_LATER_NOTE =
+  "The result appears after the meeting, from the company's vote report.";
+const MORE_FUNDS_NOTE = "Coming later: how the funds you own voted.";
+const PROXY_HOLDERS_NOTE =
+  "Every holder of more than 5% that the proxy reports, from its ownership table, with listed funds shown inside their fund family. Votes come from each fund's yearly report (Form N-PX).";
+
+// Notes shared by all three examples. The AI sentence carries the spec 7.1
+// tense edit ("will draft", "will review"): the pipeline is not live yet.
+export const EXAMPLE_NOTES: { arguments: string[]; community: string[] } = {
+  arguments: [
+    "Each argument is attributed to whoever makes it, side by side at similar length. Never OpenBoardroom's own view.",
+    "An AI model will draft these summaries from the filing; a person will review each one before it's published.",
+  ],
+  community: [
+    "Coming later. Example content, not real users.",
+    "The poll shows readers' opinions. It isn't a shareholder vote and never changes the facts above.",
+  ],
+};
 
 const alphabetHolders = (
   vanguard500Vote: "For" | "Against",
@@ -78,6 +101,10 @@ const alphabetHolders = (
   {
     name: "Vanguard 500 Index Fund",
     pct: 1.0,
+    shares: 149_007_854,
+    // The Vanguard 500 N-PX lists the board's recommendation on Proposal 14 as
+    // "For", but the proxy (p. 102) says the board recommends Against. The
+    // page shows only the fund's vote, so do not "fix" this from the N-PX.
     vote: vanguard500Vote,
     ...(note === undefined ? {} : { voteNote: note }),
     parent: "The Vanguard Group",
@@ -94,7 +121,7 @@ export const EXAMPLES: Example[] = [
     title: "Report on Online Safety for Children",
     question:
       "Should Alphabet set targets and report yearly on whether YouTube is reducing harm to children?",
-    type: "Stockholder proposal (a request; not binding)",
+    type: "Stockholder proposal (a request)",
     asks: "Within a year, adopt targets and publish a yearly report with measures of whether YouTube and Alphabet are reducing actual harm to children",
     proponent: "Boston Common Asset Management",
     boardRecommendation: "Against",
@@ -129,16 +156,27 @@ export const EXAMPLES: Example[] = [
       comments: [
         {
           author: "example_reader_1",
+          stance: "supports",
           text: 'Targets are the point. "We have policies" doesn\'t tell you whether anything got better.',
         },
         {
           author: "example_reader_2",
+          stance: "opposes",
           text: "They already report to regulators in several countries. A separate shareholder report sounds like duplicate paperwork.",
         },
         {
           author: "example_reader_3",
+          stance: "unsure",
           text: "Which harms would the metrics measure? That seems like the hard part.",
         },
+      ],
+    },
+    notes: {
+      facts: [FACTS_NOTE, RESULT_LATER_NOTE],
+      distribution: [
+        PROXY_HOLDERS_NOTE,
+        "The 36% is an estimate, shown as one. Vote reports give totals, not each holder's vote. " +
+          MORE_FUNDS_NOTE,
       ],
     },
     sources: [
@@ -155,7 +193,7 @@ export const EXAMPLES: Example[] = [
     title: "Report on Forced Labor",
     question:
       "Should Apple report on how well its policies protect workers in its supply chain from forced labor?",
-    type: "Shareholder proposal (a request; not binding)",
+    type: "Shareholder proposal (a request)",
     asks: "A board-overseen report on suppliers at significant risk of forced labor, corrective actions taken, and grievance mechanisms for affected workers, posted on Apple's website",
     proponent:
       "Not named in the filing (Apple provides proponents' names on request)",
@@ -175,6 +213,7 @@ export const EXAMPLES: Example[] = [
       {
         name: "Vanguard 500 Index Fund",
         pct: 2.0,
+        shares: 330_076_468,
         vote: "Against",
         voteNote: "with the board",
         parent: "The Vanguard Group",
@@ -208,16 +247,30 @@ export const EXAMPLES: Example[] = [
       comments: [
         {
           author: "example_reader_1",
+          stance: "supports",
           text: "Audits run by the company don't settle it. Grievance numbers would tell you more.",
         },
         {
           author: "example_reader_2",
+          stance: "opposes",
           text: "Over a thousand assessments a year and an annual report already. What would this add?",
         },
         {
           author: "example_reader_3",
+          stance: "unsure",
           text: "A third of votes for it seems like a lot. Did support go up the next year?",
         },
+      ],
+    },
+    notes: {
+      facts: [
+        FACTS_NOTE,
+        "When a filing doesn't state something, we say so rather than guess.",
+      ],
+      distribution: [
+        "Every holder of more than 5% that the proxy reports. The Vanguard 500 share comes from its holdings report (Form N-PORT, December 31, 2021, three days before the record date).",
+        "How funds voted, from their yearly vote reports (Form N-PX). " +
+          MORE_FUNDS_NOTE,
       ],
     },
     sources: [
@@ -238,7 +291,7 @@ export const EXAMPLES: Example[] = [
     title: "Equal Shareholder Voting",
     question:
       "Should every Alphabet share get one vote, phasing out the 10 votes per share held mostly by its founders?",
-    type: "Stockholder proposal (a request; not binding)",
+    type: "Stockholder proposal (a request)",
     asks: "A plan to move all stock to one vote per share, phased in over about seven years",
     proponent: "NorthStar Asset Management, Inc. Funded Pension Plan",
     boardRecommendation: "Against",
@@ -274,16 +327,27 @@ export const EXAMPLES: Example[] = [
       comments: [
         {
           author: "example_reader_1",
+          stance: "supports",
           text: "If I own the stock, my vote should count the same as anyone else's per share.",
         },
         {
           author: "example_reader_2",
+          stance: "opposes",
           text: "The founders' control is part of what I bought into. It lets them make long bets that quarterly pressure would kill.",
         },
         {
           author: "example_reader_3",
+          stance: "unsure",
           text: "Woah, I own that index fund. Interesting that it voted for this when the board was against. A seven-year phase-out sounds reasonable, but what do other dual-class companies do?",
         },
+      ],
+    },
+    notes: {
+      facts: [FACTS_NOTE, RESULT_LATER_NOTE],
+      distribution: [
+        PROXY_HOLDERS_NOTE,
+        "The 77% is an estimate, shown as one. Vote reports give totals, not each holder's vote. " +
+          MORE_FUNDS_NOTE,
       ],
     },
     sources: [

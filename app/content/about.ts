@@ -1,34 +1,35 @@
 // Copied from architecture/docs/drafts/2026-11-21-about-page-copy.md, section 3.
 // The draft stays the source of truth. Three sentences carry the spec §7.1
 // tense edits ("will draft", "will review", "will be public", "will be
-// logged publicly") because those features are not live yet.
+// logged publicly") because those features are not live yet. The fund
+// example in "Why it matters" follows Quinn's 2026-11-22 copy change.
+
+import {
+  ALPHABET_8K,
+  ALPHABET_PROXY,
+  APPLE_8K,
+  APPLE_PROXY,
+  APPLE_PROXY_2024,
+  BROADRIDGE_PROXYPULSE_2026,
+  MICROSOFT_PROXY_2023,
+  VANGUARD_NPORT_2021,
+  VANGUARD_NPX_2022,
+  VANGUARD_NPX_2024,
+} from "./sources";
 
 export type Inline =
   | string
   | { text: string; href: string }
-  | { text: string; strong: true };
+  | { text: string; strong: true }
+  | { text: string; em: true };
 export type Block =
   | { kind: "p"; parts: Inline[] }
   | { kind: "ol" | "ul"; items: Inline[][] };
 export type Section = { id: string; heading: string; blocks: Block[] };
 export type Source = { n: number; text: string; href: string };
 
-const ALPHABET_PROXY =
-  "https://www.sec.gov/Archives/edgar/data/1652044/000130817924000612/lgoog2024_def14a.htm";
-const ALPHABET_8K =
-  "https://www.sec.gov/Archives/edgar/data/1652044/000119312524160721/d805807d8k.htm";
-const APPLE_PROXY =
-  "https://www.sec.gov/Archives/edgar/data/320193/000119312522003583/d222670ddef14a.htm";
-const APPLE_8K =
-  "https://www.sec.gov/Archives/edgar/data/320193/000119312522066169/d294699d8k.htm";
-const VANGUARD_NPX_2024 =
-  "https://www.sec.gov/Archives/edgar/data/36405/000110465924094482/0001104659-24-094482-index.html";
-const VANGUARD_NPX_2022 =
-  "https://www.sec.gov/Archives/edgar/data/36405/000110465922094602/tm2221142d1_npx.txt";
-const VANGUARD_NPORT_2021 =
-  "https://www.sec.gov/Archives/edgar/data/36405/000175272422053926/primary_doc.xml";
-
 const strong = (text: string): Inline => ({ text, strong: true });
+const em = (text: string): Inline => ({ text, em: true });
 
 export const ABOUT: {
   title: string;
@@ -65,13 +66,17 @@ export const ABOUT: {
         {
           kind: "p",
           parts: [
-            "The information is technically public, but hard to use. It sits in proxy statements filed with the SEC, which often run past 40,000 words.[1] Few people read them, and most individual investors don't vote: of the shares individuals hold directly, only about 28% were voted in 2025, while institutions such as pension funds and asset managers voted about 77% of theirs.[2]",
+            "The information is technically public, but hard to use. It sits in proxy statements filed with the SEC, which often run past 40,000 words.",
+            { text: "[1]", href: APPLE_PROXY_2024 },
+            " Few people read them, and most individual investors don't vote: of the shares individuals hold directly, only about 28% were voted in 2025, while institutions such as pension funds and asset managers voted about 77% of theirs.",
+            { text: "[2]", href: BROADRIDGE_PROXYPULSE_2026 },
           ],
         },
         {
           kind: "p",
           parts: [
-            "Many more people own stock through funds, and the fund votes those shares for them. If you have a retirement account invested in a Vanguard target-date fund, or an S&P 500 index fund like BlackRock's iShares IVV, that fund has been casting votes at hundreds of companies on your behalf. Funds must report every one of those votes each year, but the reports are after-the-fact, hard to find, and harder to read.[3]",
+            "Many more people own stock through funds, and the fund votes those shares for them. If you have a retirement account invested in an S&P 500 index fund, like the Vanguard 500 Index Fund or BlackRock's iShares IVV, that fund has been casting votes at hundreds of companies on your behalf. Funds must report every one of those votes each year, but the reports are after-the-fact, hard to find, and harder to read.",
+            { text: "[3]", href: VANGUARD_NPX_2024 },
           ],
         },
         {
@@ -107,7 +112,8 @@ export const ABOUT: {
             ],
             [
               strong("The community."),
-              " Discussion and a poll of where readers stand. The poll is a way to see opinion, not a vote, and it never changes the facts above it. (Coming later.)",
+              " Discussion and a poll of where readers stand. The poll is a way to see opinion, not a vote, and it never changes the facts above it. ",
+              em("(Coming later.)"),
             ],
           ],
         },
@@ -195,15 +201,38 @@ export const ABOUT: {
         {
           kind: "p",
           parts: [
-            "Questions, corrections, or press: contact@openboardroom.org.",
+            "Questions, corrections, or press: ",
+            {
+              text: "contact@openboardroom.org",
+              href: "mailto:contact@openboardroom.org",
+            },
+            ".",
           ],
         },
       ],
     },
   ],
-  // The draft's sources 1 to 3 (word counts, Broadridge, Form N-PX examples)
-  // have no URLs yet, so they are not listed here; see the task 4 report.
   sources: [
+    {
+      n: 1,
+      text: "Apple Inc. 2024 proxy statement (Form DEF 14A), about 45,000 words, measured by OpenBoardroom",
+      href: APPLE_PROXY_2024,
+    },
+    {
+      n: 1,
+      text: "Microsoft Corporation 2023 proxy statement (Form DEF 14A), about 51,000 words, measured by OpenBoardroom",
+      href: MICROSOFT_PROXY_2023,
+    },
+    {
+      n: 2,
+      text: "Broadridge, ProxyPulse 2026: shares voted as a share of shares owned, 2025 proxy season (retail 28.0%, institutional 76.6%)",
+      href: BROADRIDGE_PROXYPULSE_2026,
+    },
+    {
+      n: 3,
+      text: "Example Form N-PX filing: Vanguard 500 Index Fund, votes for the year ending June 30, 2024",
+      href: VANGUARD_NPX_2024,
+    },
     {
       n: 4,
       text: "Alphabet Inc. 2024 proxy statement (Form DEF 14A, filed 2024-04-26)",
