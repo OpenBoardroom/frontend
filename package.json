@@ -12,6 +12,7 @@
     "cf-typegen": "wrangler types",
     "check": "biome check . && react-router typegen && tsc -b",
     "dev": "react-router dev",
+    "e2e": "react-router build && playwright test",
     "format": "biome check --write .",
     "postinstall": "wrangler types",
     "preview": "react-router build && vite preview",
@@ -25,6 +26,7 @@
     "react-router": "7.16.0"
   },
   "devDependencies": {
+    "@axe-core/playwright": "4.14.0",
     "@biomejs/biome": "2.6.8",
     "@cloudflare/vite-plugin": "1.70.1",
     "@playwright/test": "1.65.1",
