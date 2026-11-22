@@ -190,6 +190,13 @@ describe("EXAMPLES", () => {
     }
   });
 
+  test("the Apple proponent cites the proxy's supplier figure", () => {
+    const apple = EXAMPLES.find((e) => e.id === "apple-2022-p7");
+    expect(apple?.arguments.for.points.join(" ")).toContain(
+      "over 200 suppliers",
+    );
+  });
+
   test("community polls add to 100 and comments are present", () => {
     for (const e of EXAMPLES) {
       const p = e.community.poll;

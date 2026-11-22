@@ -232,7 +232,7 @@ export const EXAMPLES: Example[] = [
       for: {
         by: "The proponent",
         points: [
-          "Apple relies on hundreds of suppliers, some reported to be linked to China's forced-labor programs involving Uyghurs, which several governments have called genocide; with US legislation pending to bar goods from the region, a report would reduce regulatory risk.",
+          "Apple relies on over 200 suppliers, some reported to be linked to China's forced-labor programs involving Uyghurs, which several governments have called genocide; with US legislation pending to bar goods from the region, a report would reduce regulatory risk.",
         ],
       },
       against: {
