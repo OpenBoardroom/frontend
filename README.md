@@ -1,54 +1,27 @@
-# Boardroom
+# OpenBoardroom frontend
 
-Frontend application for Boardroom LLC. This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app) in tandem with React-SSR-boilerplate.
+The public website for [OpenBoardroom](https://openboardroom.org): a React Router v7 app on Cloudflare Workers. Design and plan: see `docs/` and the [deploy spec](https://github.com/OpenBoardroom/architecture/blob/main/docs/specs/2026-11-21-frontend-deploy-and-holding-page-design.md).
 
-#### features added 
+## Commands
 
-- updated and re-organized dependencies
-- Boardroom development-in-progress overlay
-- Boardroom assets
+Node 24 (`.nvmrc`) and pnpm (`corepack enable`).
 
-## Development Guide
+| Command        | What it does                                          |
+| -------------- | ----------------------------------------------------- |
+| `pnpm install` | Install dependencies and generate Worker types        |
+| `pnpm dev`     | Dev server on localhost                               |
+| `pnpm check`   | Biome, then `react-router typegen && tsc -b`          |
+| `pnpm test`    | Vitest with coverage                                  |
+| `pnpm build`   | Production build                                      |
+| `pnpm preview` | Build, then serve the built Worker locally in workerd |
 
-First clone the repository:
-```
-git clone git@github.com:sudo-quinnmaloney/Boardroom-Frontend.git
-```
-Then, in the project directory, you can run:
+## Deploys
 
-### `npm start`
+Only CI deploys. Do not run `wrangler deploy` by hand.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Cutover (Quinn, after the PR merges)
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+1. Confirm the `deploy` job succeeded and openboardroom.org serves the new page.
+2. In the old Pages project, remove the custom domains brdrmr.org and www.brdrmr.org. Merge the one-line PR that adds them to `wrangler.jsonc`; its deploy attaches them. brdrmr.org is unreachable for the minutes between these two steps.
+3. Check every redirect host from §5.
+4. Delete the old Pages project. Record the result on #19.
