@@ -8,6 +8,8 @@
   "observability": {
     "enabled": true
   },
+  // Worker runs before static assets so redirect hosts 301 every path.
+  "assets": { "binding": "ASSETS", "run_worker_first": true },
   "routes": [
     // brdrmr.org and www.brdrmr.org are deliberately not attached yet: they
     // carry live email DNS and are attached in a later, staged step

@@ -18,6 +18,17 @@ test("host matching ignores case, port, and a trailing dot", () => {
   }
 });
 
+test("host comes from the request URL when no Host header is set", () => {
+  const res = canonicalRedirect(new Request("https://BRDRMR.COM/x"));
+  expect(res?.status).toBe(301);
+  expect(res?.headers.get("location")).toBe("https://openboardroom.org/x");
+});
+
+test("redirect headers are mutable", () => {
+  const res = canonicalRedirect(new Request("https://brdrmr.com/"));
+  expect(() => res?.headers.set("cache-control", "no-store")).not.toThrow();
+});
+
 test.each([
   "openboardroom.org",
   "localhost:5173",

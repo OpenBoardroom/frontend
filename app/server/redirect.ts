@@ -21,8 +21,7 @@ export function canonicalRedirect(request: Request): Response | null {
   const host = normalizeHost(request.headers.get("host") ?? url.host);
   if (!REDIRECT_HOSTS.includes(host)) return null;
   // pathname and search are used as-is so percent-encoding is not altered.
-  return Response.redirect(
-    `${CANONICAL_ORIGIN}${url.pathname}${url.search}`,
-    301,
-  );
+  const location = `${CANONICAL_ORIGIN}${url.pathname}${url.search}`;
+  // Not Response.redirect(): its headers are immutable.
+  return new Response(null, { status: 301, headers: { location } });
 }
