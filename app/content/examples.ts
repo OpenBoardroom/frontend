@@ -1,3 +1,4 @@
+// License: CC BY-NC-SA 4.0 plus an additional permission (see README.md, "License").
 // Three real proposals for the "How it works" example list. Figures and URLs
 // come from the About draft's sources 4 to 6; titles, questions, arguments,
 // and notes come from docs/design/example-list-v9.html. Where they differed,

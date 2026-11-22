@@ -1,3 +1,4 @@
+// License: CC BY-NC-SA 4.0 plus an additional permission (see README.md, "License").
 // Copied from architecture/docs/drafts/2026-11-21-about-page-copy.md, section 3.
 // The draft stays the source of truth. Three sentences carry the spec §7.1
 // tense edits ("will draft", "will review", "will be public", "will be

@@ -24,6 +24,11 @@ export function meta(_: Route.MetaArgs) {
   ];
 }
 
+// The Worker is also served on workers.dev; point search engines at the real host.
+export const links: Route.LinksFunction = () => [
+  { rel: "canonical", href: "https://openboardroom.org/" },
+];
+
 export async function loader({ context }: Route.LoaderArgs) {
   const { env } = context.get(cloudflareContext);
   const feed = await fetchRecentCommits({

@@ -56,6 +56,14 @@ test("meets WCAG AA", async ({ page }) => {
   expect(results.violations).toEqual([]);
 });
 
+test("declares openboardroom.org as the canonical URL", async ({ page }) => {
+  await page.goto("/");
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
+    "href",
+    "https://openboardroom.org/",
+  );
+});
+
 test("redirect host", async ({ request }) => {
   const response = await request.get("/x?y=1", {
     headers: { host: "brdrmr.org" },

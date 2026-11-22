@@ -33,6 +33,16 @@ test("GET asset hit is served from assets", async () => {
   expect(router).not.toHaveBeenCalled();
 });
 
+test("HEAD on the canonical host is served from assets like GET", async () => {
+  const { assets, router, run } = setup(200);
+  const res = await run(
+    new Request("https://openboardroom.org/a.js", { method: "HEAD" }),
+  );
+  expect(res.status).toBe(200);
+  expect(assets).toHaveBeenCalledOnce();
+  expect(router).not.toHaveBeenCalled();
+});
+
 test("GET asset 404 falls through to the router", async () => {
   const { router, run } = setup(404);
   const res = await run(new Request("https://openboardroom.org/"));

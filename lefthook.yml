@@ -5,4 +5,4 @@ pre-commit:
     tsc:
       run: pnpm exec tsc -b
     gitleaks:
-      run: gitleaks protect --staged
+      run: gitleaks git --staged

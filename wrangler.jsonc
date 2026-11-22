@@ -11,9 +11,10 @@
   // Worker runs before static assets so redirect hosts 301 every path.
   "assets": { "binding": "ASSETS", "run_worker_first": true },
   "routes": [
-    // brdrmr.org and www.brdrmr.org are deliberately not attached yet: they
-    // carry live email DNS and are attached in a later, staged step
-    // (architecture spec §5 and §10).
+    // brdrmr.org and www.brdrmr.org are deliberately not listed yet: both are
+    // still attached to the old Cloudflare Pages project, and a Custom Domain
+    // can't claim them until cutover step 2 detaches them (architecture spec
+    // §5 and §10).
     { "pattern": "openboardroom.org", "custom_domain": true },
     { "pattern": "www.openboardroom.org", "custom_domain": true },
     { "pattern": "openboardroom.io", "custom_domain": true },

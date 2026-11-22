@@ -1,3 +1,4 @@
+// License: CC BY-NC-SA 4.0 plus an additional permission (see README.md, "License").
 // EDGAR and other source URLs shared by the About copy and the examples.
 export const ALPHABET_PROXY =
   "https://www.sec.gov/Archives/edgar/data/1652044/000130817924000612/lgoog2024_def14a.htm";

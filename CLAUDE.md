@@ -22,6 +22,7 @@ Use Node 24 (`.nvmrc`) and pnpm (pinned in `packageManager`; run `corepack enabl
 - `pnpm test`: Vitest with coverage (thresholds in `vitest.config.ts`).
 - `pnpm build`: production build into `build/`.
 - `pnpm preview`: build, then serve the built Worker locally in workerd.
+- `pnpm e2e`: build, then run the Playwright end-to-end tests; with `CI=1`, it starts fresh servers instead of reusing running ones.
 - Never run `wrangler deploy`, `wrangler versions upload`, or `wrangler rollback`; CI deploys.
 
 ## Style

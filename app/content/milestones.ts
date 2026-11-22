@@ -1,3 +1,4 @@
+// License: CC BY-NC-SA 4.0 plus an additional permission (see README.md, "License").
 export type Milestone = {
   title: string;
   detail?: string;
