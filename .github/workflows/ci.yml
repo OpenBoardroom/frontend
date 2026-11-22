@@ -71,7 +71,18 @@ jobs:
           WRANGLER_SEND_METRICS: "false"
           PR_NUMBER: ${{ github.event.number }}
         run: |
-          pnpm exec wrangler versions upload --message "PR #${PR_NUMBER}" | tee "$RUNNER_TEMP/upload.log"
+          # pipefail: without it the step's status is tee's, and a failed upload passes.
+          set -o pipefail
+          status=0
+          pnpm exec wrangler versions upload --message "PR #${PR_NUMBER}" 2>&1 | tee "$RUNNER_TEMP/upload.log" || status=$?
+          if [ "$status" -ne 0 ]; then
+            # Versions can only be uploaded to an existing Worker; the first deploy (merge to main) creates it.
+            if grep -q 'Worker that does not yet exist' "$RUNNER_TEMP/upload.log"; then
+              echo "No preview for PR #${PR_NUMBER}: the Worker doesn't exist until the first production deploy. Previews start working after the first merge to main." >> "$GITHUB_STEP_SUMMARY"
+              exit 0
+            fi
+            exit "$status"
+          fi
           url=$(grep -oE 'https://[^[:space:]]+' <(grep 'Version Preview URL' "$RUNNER_TEMP/upload.log") | head -n 1 || true)
           if [ -n "$url" ]; then
             echo "Preview URL for PR #${PR_NUMBER}: $url" >> "$GITHUB_STEP_SUMMARY"
