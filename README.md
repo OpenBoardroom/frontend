@@ -19,6 +19,10 @@ Node 24 (`.nvmrc`) and pnpm (`corepack enable`).
 
 Only CI deploys. Do not run `wrangler deploy` by hand.
 
+## CI and deploy credentials
+
+Anyone with write access to the repo can open a same-repo PR whose code runs in CI with the preview token (`CLOUDFLARE_PREVIEW_TOKEN`). That token can upload Worker versions but has no DNS or route access. Fork PRs and Dependabot PRs get no preview. Only `main`, through the `production` environment, can reach the deploy token (`CLOUDFLARE_API_TOKEN`).
+
 ## Cutover (Quinn, after the PR merges)
 
 1. Confirm the `deploy` job succeeded and openboardroom.org serves the new page.

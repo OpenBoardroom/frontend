@@ -15,6 +15,8 @@ jobs:
   rollback:
     runs-on: ubuntu-latest
     environment: production
+    # One pending run per group: a pending rollback can be superseded by a later
+    # deploy (and the reverse). A started run is never cancelled.
     concurrency:
       group: production
       cancel-in-progress: false
@@ -38,7 +40,7 @@ jobs:
         run: |
           args=()
           if [ -n "$VERSION_ID" ]; then
-            if ! [[ "$VERSION_ID" =~ ^[0-9a-fA-F-]{36}$ ]]; then
+            if ! [[ "$VERSION_ID" =~ ^[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}$ ]]; then
               echo "version_id must be a UUID" >&2
               exit 1
             fi

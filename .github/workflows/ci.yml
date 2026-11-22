@@ -32,8 +32,8 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm check
       - run: pnpm test
-      - run: pnpm build
       - run: pnpm exec playwright install --with-deps chromium
+      # `pnpm e2e` builds first, so a build failure fails here before any test runs.
       - run: pnpm e2e
       - name: Upload Playwright report
         if: failure()
@@ -49,7 +49,8 @@ jobs:
   # Fork PRs never get here: the preview token is not exposed to them.
   preview:
     needs: check
-    if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
+    # Dependabot runs get Dependabot secrets, not Actions secrets, so the preview token would be empty.
+    if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.actor != 'dependabot[bot]'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -83,7 +84,9 @@ jobs:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     environment: production
-    # Never cancel a deploy that has started; later ones queue behind it.
+    # Never cancel a run that has started. GitHub keeps one pending run per group and
+    # cancels older pending ones, so a pending deploy or rollback can be superseded
+    # by a later one. The stale-commit guard below covers re-runs and slow runs.
     concurrency:
       group: production
       cancel-in-progress: false
@@ -96,9 +99,27 @@ jobs:
         with:
           node-version-file: .nvmrc
           cache: pnpm
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm build
+      - name: Skip if main has moved on
+        id: head
+        env:
+          REPO_URL: https://github.com/${{ github.repository }}.git
+          RUN_SHA: ${{ github.sha }}
+        run: |
+          head=$(git ls-remote "$REPO_URL" refs/heads/main | cut -f1)
+          if [ -z "$head" ]; then
+            echo "Could not read the head of main; refusing to deploy." >&2
+            exit 1
+          fi
+          if [ "$head" != "$RUN_SHA" ]; then
+            echo "Deploy skipped: ${RUN_SHA} is no longer the head of main (${head}). The newer commit's run deploys it." >> "$GITHUB_STEP_SUMMARY"
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          fi
+      - if: steps.head.outputs.skip != 'true'
+        run: pnpm install --frozen-lockfile
+      - if: steps.head.outputs.skip != 'true'
+        run: pnpm build
       - name: Deploy to production
+        if: steps.head.outputs.skip != 'true'
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
