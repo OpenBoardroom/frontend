@@ -1,50 +1,44 @@
 {
-  "name": "cloudflare-project",
-  "version": "0.1.0",
+  "name": "openboardroom-frontend",
   "private": true,
-  "dependencies": {
-    "@emotion/react": "^11.13.0",
-    "@emotion/styled": "^11.13.0",
-    "@mui/base": "^5.0.0-beta.40",
-    "@mui/icons-material": "^5.16.6",
-    "@mui/material": "^5.16.6",
-    "@mui/styles": "^5.16.6",
-    "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/react": "^12.1.5",
-    "@testing-library/user-event": "^12.8.3",
-    "axios": "^1.7.3",
-    "react": "^17.0.0",
-    "react-dom": "^17.0.0",
-    "react-helmet": "^6.1.0",
-    "react-redux": "^7.2.9",
-    "react-router-dom": "^5.3.4",
-    "react-scripts": "5.0.1",
-    "react-swipeable-views": "^0.14.0",
-    "redux": "^4.2.1",
-    "web-vitals": "^2.1.4"
+  "license": "AGPL-3.0-only",
+  "type": "module",
+  "packageManager": "pnpm@12.21.0",
+  "engines": {
+    "node": ">=24"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "build": "react-router build",
+    "cf-typegen": "wrangler types",
+    "check": "biome check . && react-router typegen && tsc -b",
+    "dev": "react-router dev",
+    "e2e": "react-router build && playwright test",
+    "format": "biome check --write .",
+    "postinstall": "wrangler types",
+    "preview": "react-router build && vite preview",
+    "test": "vitest run --coverage",
+    "typecheck": "wrangler types && react-router typegen && tsc -b"
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
+  "dependencies": {
+    "isbot": "5.2.3",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "react-router": "7.16.0"
   },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+  "devDependencies": {
+    "@axe-core/playwright": "4.14.0",
+    "@biomejs/biome": "2.6.8",
+    "@cloudflare/vite-plugin": "1.70.1",
+    "@playwright/test": "1.65.1",
+    "@react-router/dev": "7.16.0",
+    "@types/node": "24.19.2",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "@vitest/coverage-v8": "5.1.1",
+    "lefthook": "2.2.2",
+    "typescript": "5.9.3",
+    "vite": "8.3.8",
+    "vitest": "5.1.1",
+    "wrangler": "4.166.0"
   }
 }

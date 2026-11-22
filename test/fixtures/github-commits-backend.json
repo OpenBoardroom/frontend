@@ -1,0 +1,42 @@
+[
+  {
+    "commit": {
+      "committer": { "date": "2026-11-21T19:29:20Z" },
+      "message": "Merge pull request #1 from OpenBoardroom/task/BR-11\n\n[BR-11] Backend foundation: schema, published views, EDGAR discovery and fetch"
+    },
+    "html_url": "https://github.com/OpenBoardroom/backend/commit/65c73a8cbf9af6e94aa70b0e295ab548952342d5",
+    "sha": "65c73a8cbf9af6e94aa70b0e295ab548952342d5"
+  },
+  {
+    "commit": {
+      "committer": { "date": "2026-11-21T18:53:12Z" },
+      "message": "[BR-11] UPDATE: match the foundation plan to the code and add a pipeline runbook\n\nCo-Authored-By: Claude Opus 5.5 \u003cnoreply@anthropic.com\u003e"
+    },
+    "html_url": "https://github.com/OpenBoardroom/backend/commit/a41af9441940f5c5e41bc1d0a760ce5b23d3bb99",
+    "sha": "a41af9441940f5c5e41bc1d0a760ce5b23d3bb99"
+  },
+  {
+    "commit": {
+      "committer": { "date": "2026-11-21T18:51:46Z" },
+      "message": "[BR-11] FIX: stop fetch when EDGAR refuses us and harden the EDGAR client\n\nStop the fetch run on HTTP 403, 429, 5xx, or a network error instead of\nsending every remaining filing another refused request; report each\nper-filing failure as it happens. Re-read the clock after the rate\nlimiter sleeps, turn invalid or non-object JSON into EdgarError, and\ntreat an empty primaryDocument as missing in discover and fetch.\n\nCo-Authored-By: Claude Opus 5.5 \u003cnoreply@anthropic.com\u003e"
+    },
+    "html_url": "https://github.com/OpenBoardroom/backend/commit/4664acfd9e1576b1fdc836441214321a988529e4",
+    "sha": "4664acfd9e1576b1fdc836441214321a988529e4"
+  },
+  {
+    "commit": {
+      "committer": { "date": "2026-11-21T18:42:02Z" },
+      "message": "[BR-11] FIX: widen membership matching for short discovery windows\n\nCo-Authored-By: Claude Opus 5.5 \u003cnoreply@anthropic.com\u003e"
+    },
+    "html_url": "https://github.com/OpenBoardroom/backend/commit/af792553e285b54410c0fe98e1b27b6326851e41",
+    "sha": "af792553e285b54410c0fe98e1b27b6326851e41"
+  },
+  {
+    "commit": {
+      "committer": { "date": "2026-11-21T18:38:37Z" },
+      "message": "[BR-11] FIX: judge membership over a lookahead from the filing date\n\nCo-Authored-By: Claude Opus 5.5 \u003cnoreply@anthropic.com\u003e"
+    },
+    "html_url": "https://github.com/OpenBoardroom/backend/commit/626251a88748b7c794555a73e2875ef1ee6a233c",
+    "sha": "626251a88748b7c794555a73e2875ef1ee6a233c"
+  }
+]

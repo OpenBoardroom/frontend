@@ -1,0 +1,52 @@
+[
+  {
+    "commit": {
+      "committer": {
+        "date": "2026-11-21T19:10:00Z"
+      },
+      "message": "[BR-9] UPDATE: stall spinner for effect (#5)"
+    },
+    "html_url": "https://github.com/OpenBoardroom/frontend/commit/bed79f1091ecc8745bd526af00a309b12d98ab8d",
+    "sha": "bed79f1091ecc8745bd526af00a309b12d98ab8d"
+  },
+  {
+    "commit": {
+      "committer": {
+        "date": "2026-11-21T18:45:00Z"
+      },
+      "message": "[BR-8] UPDATE: finish mission statement draft, adjust spinner placement"
+    },
+    "html_url": "https://github.com/OpenBoardroom/frontend/commit/a0b2eb038cdaa2b0fa8ed77fd76f503e44d08591",
+    "sha": "a0b2eb038cdaa2b0fa8ed77fd76f503e44d08591"
+  },
+  {
+    "commit": {
+      "committer": {
+        "date": "2026-11-21T18:40:00Z"
+      },
+      "message": "[BR-8] FIX: remove excess overflow scrollers"
+    },
+    "html_url": "https://github.com/OpenBoardroom/frontend/commit/ae38b329746440462ac9bf3fb30c386665ad006f",
+    "sha": "ae38b329746440462ac9bf3fb30c386665ad006f"
+  },
+  {
+    "commit": {
+      "committer": {
+        "date": "2026-11-21T18:30:00Z"
+      },
+      "message": "[BR-8] UPDATE: updates to mission statement"
+    },
+    "html_url": "https://github.com/OpenBoardroom/frontend/commit/33a22d1b9a4366449c8049d04db29332f70aec5d",
+    "sha": "33a22d1b9a4366449c8049d04db29332f70aec5d"
+  },
+  {
+    "commit": {
+      "committer": {
+        "date": "2026-11-21T18:00:00Z"
+      },
+      "message": "[BR-8] UPDATE: draft mission statement and re-configure git display"
+    },
+    "html_url": "https://github.com/OpenBoardroom/frontend/commit/0840767320047b88129ba43886ff93de8288d601",
+    "sha": "0840767320047b88129ba43886ff93de8288d601"
+  }
+]

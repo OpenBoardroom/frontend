@@ -1,0 +1,8 @@
+pre-commit:
+  commands:
+    biome:
+      run: pnpm exec biome check --staged
+    tsc:
+      run: pnpm exec tsc -b
+    gitleaks:
+      run: gitleaks git --staged

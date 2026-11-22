@@ -1,0 +1,25 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "openboardroom-frontend",
+  "compatibility_date": "2026-11-22",
+  "main": "./workers/app.ts",
+  "workers_dev": true,
+  "preview_urls": true,
+  "observability": {
+    "enabled": true
+  },
+  // Worker runs before static assets so redirect hosts 301 every path.
+  "assets": { "binding": "ASSETS", "run_worker_first": true },
+  "routes": [
+    // brdrmr.org and www.brdrmr.org are deliberately not listed yet: both are
+    // still attached to the old Cloudflare Pages project, and a Custom Domain
+    // can't claim them until cutover step 2 detaches them (architecture spec
+    // §5 and §10).
+    { "pattern": "openboardroom.org", "custom_domain": true },
+    { "pattern": "www.openboardroom.org", "custom_domain": true },
+    { "pattern": "openboardroom.io", "custom_domain": true },
+    { "pattern": "www.openboardroom.io", "custom_domain": true },
+    { "pattern": "brdrmr.com", "custom_domain": true },
+    { "pattern": "www.brdrmr.com", "custom_domain": true }
+  ]
+}

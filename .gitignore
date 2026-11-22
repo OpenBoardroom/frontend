@@ -1,25 +1,26 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
-# dependencies
-/node_modules
-/.pnp
-.pnp.js
+.DS_Store
+node_modules/
+*.tsbuildinfo
 package-lock.json
 
-# testing
-/coverage
+# React Router
+/.react-router/
+/build/
 
-# production
-/build
+# Cloudflare
+.mf
+.wrangler
+.dev.vars*
+worker-configuration.d.ts
 
-# misc
-.DS_Store
-.env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+# Secrets (keep the example)
+.env*
+!.env.example
 
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+# Test output
+coverage/
+playwright-report/
+test-results/
+
+# Scratch
+.superpowers/
