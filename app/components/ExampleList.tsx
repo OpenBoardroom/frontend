@@ -10,12 +10,9 @@ import { PowerBar, Swatch, VoteBar } from "./VoteBar";
 
 const count = (n: number) => n.toLocaleString("en-US");
 
-function ExternalLink({ href, children }: { href: string; children: string }) {
-  return (
-    <a href={href} target="_blank" rel="noopener noreferrer">
-      {children}
-    </a>
-  );
+// Same-tab links, like every other link on the page.
+function SourceLink({ href, children }: { href: string; children: string }) {
+  return <a href={href}>{children}</a>;
 }
 
 function Notes({ lines }: { lines: string[] }) {
@@ -77,7 +74,7 @@ function Facts({ e }: { e: Example }) {
                 {e.sources.map((s, i) => (
                   <span key={s.href + s.label}>
                     {i > 0 ? " · " : null}
-                    <ExternalLink href={s.href}>{s.label}</ExternalLink>
+                    <SourceLink href={s.href}>{s.label}</SourceLink>
                   </span>
                 ))}
               </td>
@@ -133,7 +130,7 @@ function VoteLine({ holder, e }: { holder: Holder; e: Example }) {
       {npx ? (
         <>
           {" · "}
-          <ExternalLink href={npx.href}>N-PX</ExternalLink>
+          <SourceLink href={npx.href}>N-PX</SourceLink>
         </>
       ) : null}
     </>

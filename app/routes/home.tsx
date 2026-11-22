@@ -39,7 +39,10 @@ export async function loader({ context }: Route.LoaderArgs) {
 function useVisibleRevalidation() {
   const { revalidate } = useRevalidator();
   const revalidateRef = useRef(revalidate);
-  revalidateRef.current = revalidate;
+  // Keep the latest revalidate without restarting the interval.
+  useEffect(() => {
+    revalidateRef.current = revalidate;
+  });
   useEffect(() => {
     const id = setInterval(() => {
       if (document.visibilityState === "visible") void revalidateRef.current();
