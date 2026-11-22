@@ -3,8 +3,9 @@ import { defineConfig, devices } from "@playwright/test";
 export default defineConfig({
   testDir: "./e2e",
   testMatch: "*.spec.ts",
-  reporter: "list",
-  use: { baseURL: "http://localhost:8787" },
+  forbidOnly: !!process.env.CI,
+  reporter: process.env.CI ? [["list"], ["html", { open: "never" }]] : "list",
+  use: { baseURL: "http://localhost:8787", trace: "retain-on-failure" },
   projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],
   webServer: [
     {
@@ -19,6 +20,7 @@ export default defineConfig({
       url: "http://localhost:8787",
       reuseExistingServer: !process.env.CI,
       timeout: 60_000,
+      env: { ...process.env, WRANGLER_SEND_METRICS: "false" },
     },
   ],
 });

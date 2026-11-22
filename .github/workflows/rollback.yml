@@ -1,0 +1,47 @@
+name: Rollback
+
+on:
+  workflow_dispatch:
+    inputs:
+      version_id:
+        description: Worker version ID to roll back to (blank = the previous version)
+        required: false
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  rollback:
+    runs-on: ubuntu-latest
+    environment: production
+    concurrency:
+      group: production
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Roll back production
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+          WRANGLER_SEND_METRICS: "false"
+          VERSION_ID: ${{ inputs.version_id }}
+          ACTOR: ${{ github.actor }}
+        run: |
+          args=()
+          if [ -n "$VERSION_ID" ]; then
+            if ! [[ "$VERSION_ID" =~ ^[0-9a-fA-F-]{36}$ ]]; then
+              echo "version_id must be a UUID" >&2
+              exit 1
+            fi
+            args+=("$VERSION_ID")
+          fi
+          pnpm exec wrangler rollback "${args[@]}" --message "Rollback by ${ACTOR}" -y
