@@ -15,10 +15,15 @@ export const MILESTONES: Milestone[] = [
   },
   {
     title: "Ballot data pipeline",
-    detail: "Discovery and fetching live for the S&P 100",
+    detail: "Discovery, fetching, extraction, and supplements for the S&P 100",
+    status: "done",
+  },
+  {
+    title: "Extraction, review, and vote results",
+    detail:
+      "2026 season extracted and checked; review tools built; vote results next",
     status: "in-progress",
   },
-  { title: "Extraction, review, and vote results", status: "next" },
-  { title: "Public site with real ballot items", status: "later" },
+  { title: "Public site with real ballot items", status: "next" },
   { title: "Phase 1 launch for the 2027 proxy season", status: "later" },
 ];

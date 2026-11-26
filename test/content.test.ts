@@ -265,6 +265,16 @@ describe("EXAMPLES", () => {
 });
 
 describe("MILESTONES", () => {
+  test("details describe the pipeline as built, without claiming public data", () => {
+    const byTitle = Object.fromEntries(MILESTONES.map((m) => [m.title, m]));
+    expect(byTitle["Ballot data pipeline"]?.detail).toBe(
+      "Discovery, fetching, extraction, and supplements for the S&P 100",
+    );
+    expect(byTitle["Extraction, review, and vote results"]?.detail).toBe(
+      "2026 season extracted and checked; review tools built; vote results next",
+    );
+  });
+
   test("exactly one item is in progress", () => {
     expect(MILESTONES.filter((m) => m.status === "in-progress")).toHaveLength(
       1,
@@ -274,9 +284,9 @@ describe("MILESTONES", () => {
   test("the five from the spec, in order", () => {
     expect(MILESTONES.map((m) => m.status)).toEqual([
       "done",
+      "done",
       "in-progress",
       "next",
-      "later",
       "later",
     ]);
     expect(MILESTONES.map((m) => m.title)).toEqual([
