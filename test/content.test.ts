@@ -43,7 +43,7 @@ describe("ABOUT", () => {
   });
 
   test("title and description", () => {
-    expect(ABOUT.title).toBe("OpenBoardroom: your seat at the table");
+    expect(ABOUT.title).toBe("OpenBoardroom");
     expect(ABOUT.description).toMatch(/^Every year, public companies/);
     expect(ABOUT.description.endsWith("from shareholders.")).toBe(true);
   });
