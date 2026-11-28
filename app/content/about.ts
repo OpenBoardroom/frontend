@@ -38,7 +38,7 @@ export const ABOUT: {
   sections: Section[];
   sources: Source[];
 } = {
-  title: "OpenBoardroom: your seat at the table",
+  title: "OpenBoardroom",
   description:
     "Every year, public companies put major decisions to a shareholder vote: who sits on the board, how executives are paid, whether to merge or move the company's legal home, and how to respond to proposals from shareholders.",
   sections: [

@@ -143,7 +143,10 @@ main {
   background: var(--ob-surface-alt);
   border: 1px solid var(--ob-border);
   border-radius: 8px;
-  padding: 16px;
+  padding-left: 16px;
+  padding-right: 16px;
+  padding-bottom: 0;
+  padding-top: 0;
   font-size: 14px;
 }
 
