@@ -1,8 +1,8 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, type Page, test } from "@playwright/test";
 
-const PAGES = ["/", "/season", "/explore"];
-const LINKS = ["About", "This season", "Explore"];
+const PAGES = ["/", "/ballot", "/explore"];
+const LINKS = ["About", "Ballot", "Explore"];
 
 async function expectBar(page: Page) {
   const nav = page.getByRole("navigation", { name: "Main" });
@@ -23,9 +23,9 @@ test("every page has the bar, the 404 page included", async ({ page }) => {
 });
 
 test("the current page is marked", async ({ page }) => {
-  await page.goto("/season");
+  await page.goto("/ballot");
   const nav = page.getByRole("navigation", { name: "Main" });
-  await expect(nav.getByRole("link", { name: "This season" })).toHaveAttribute(
+  await expect(nav.getByRole("link", { name: "Ballot" })).toHaveAttribute(
     "aria-current",
     "page",
   );
@@ -59,7 +59,7 @@ test("on a phone the links fold into a menu and nothing overflows", async ({
   await page.goto("/");
   const menu = page.locator("details.nav-menu");
   await expect(menu).not.toHaveAttribute("open", /.*/);
-  await expect(page.getByRole("link", { name: "This season" })).toBeHidden();
+  await expect(page.getByRole("link", { name: "Ballot" })).toBeHidden();
   await menu.locator("summary").click();
   for (const name of LINKS) {
     await expect(menu.getByRole("link", { name, exact: true })).toBeVisible();
@@ -95,7 +95,7 @@ test("with JavaScript on, the phone menu closes after a link is chosen", async (
   await page.goto("/");
   const menu = page.locator("details.nav-menu");
   await menu.locator("summary").click();
-  await menu.getByRole("link", { name: "This season" }).click();
-  await expect(page).toHaveURL(/\/season$/);
+  await menu.getByRole("link", { name: "Ballot" }).click();
+  await expect(page).toHaveURL(/\/ballot$/);
   await expect(menu).not.toHaveAttribute("open", /.*/);
 });

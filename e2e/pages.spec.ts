@@ -1,19 +1,27 @@
 import { expect, test } from "@playwright/test";
 
-test("the season page says what it will show", async ({ page }) => {
-  await page.goto("/season");
+test("the ballot page says what it will show", async ({ page }) => {
+  await page.goto("/ballot");
   await expect(
-    page.getByRole("heading", { level: 1, name: "This season" }),
+    page.getByRole("heading", { level: 1, name: "Ballot" }),
   ).toBeVisible();
   await expect(page.getByText("This view is in development.")).toBeVisible();
-  await expect(page).toHaveTitle("This season · OpenBoardroom");
+  await expect(page).toHaveTitle("Ballot · OpenBoardroom");
   await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
     "href",
-    "https://openboardroom.org/season",
+    "https://openboardroom.org/ballot",
   );
   await expect(
     page.getByRole("link", { name: "Read about OpenBoardroom" }),
   ).toHaveAttribute("href", "/");
+});
+
+test("the old /season address redirects permanently to /ballot", async ({
+  request,
+}) => {
+  const response = await request.get("/season?q=kept", { maxRedirects: 0 });
+  expect(response.status()).toBe(301);
+  expect(response.headers().location).toBe("/ballot");
 });
 
 test("explore echoes the search query, and shows nothing without one", async ({
