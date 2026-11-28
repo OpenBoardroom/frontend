@@ -8,17 +8,17 @@ export type Page = { title: string; description: string };
 
 export const NAV_LINKS: readonly NavLink[] = [
   { label: "About", to: "/" },
-  { label: "This season", to: "/season" },
+  { label: "Ballot", to: "/ballot" },
   { label: "Explore", to: "/explore" },
 ];
 
 export const SEARCH_LABEL = "Search proposals";
 
-export const PAGES: { season: Page; explore: Page } = {
-  season: {
-    title: "This season",
+export const PAGES: { ballot: Page; explore: Page } = {
+  ballot: {
+    title: "Ballot",
     description:
-      "An overview of the 2026 ballot at S&P 100 companies: each item, what the vote decides, who put it forward, and the board's recommendation. This view is in development.",
+      "An overview of the items on S&P 100 companies' upcoming shareholder ballots: what each vote decides, who put it forward, and the board's recommendation. This view is in development.",
   },
   explore: {
     title: "Explore",

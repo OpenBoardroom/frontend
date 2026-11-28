@@ -4,7 +4,7 @@ import { canonicalUrl, MAX_QUERY, searchQuery } from "../app/lib/site";
 describe("canonicalUrl", () => {
   test("joins the canonical host and the path", () => {
     expect(canonicalUrl("/")).toBe("https://openboardroom.org/");
-    expect(canonicalUrl("/season")).toBe("https://openboardroom.org/season");
+    expect(canonicalUrl("/ballot")).toBe("https://openboardroom.org/ballot");
   });
 });
 

@@ -301,20 +301,20 @@ describe("MILESTONES", () => {
 });
 
 describe("PAGES and navigation", () => {
-  test("the bar links About, This season, and Explore, in order", () => {
+  test("the bar links About, Ballot, and Explore, in order", () => {
     expect(NAV_LINKS).toEqual([
       { label: "About", to: "/" },
-      { label: "This season", to: "/season" },
+      { label: "Ballot", to: "/ballot" },
       { label: "Explore", to: "/explore" },
     ]);
     expect(SEARCH_LABEL).toBe("Search proposals");
   });
 
   test("the in-development pages say what they will show", () => {
-    expect(PAGES.season).toEqual({
-      title: "This season",
+    expect(PAGES.ballot).toEqual({
+      title: "Ballot",
       description:
-        "An overview of the 2026 ballot at S&P 100 companies: each item, what the vote decides, who put it forward, and the board's recommendation. This view is in development.",
+        "An overview of the items on S&P 100 companies' upcoming shareholder ballots: what each vote decides, who put it forward, and the board's recommendation. This view is in development.",
     });
     expect(PAGES.explore).toEqual({
       title: "Explore",

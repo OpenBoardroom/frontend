@@ -7,10 +7,11 @@ The public website for [OpenBoardroom](https://openboardroom.org): a React Route
 | Route      | What it shows                                                                                                          |
 | ---------- | ---------------------------------------------------------------------------------------------------------------------- |
 | `/`        | About: the mission, how it works, three example proposals, and the status panel (milestones and recent commits)        |
-| `/season`  | This season: in development. It will show the 2026 ballot at S&P 100 companies                                         |
+| `/ballot`  | Ballot: in development. It will show the items on S&P 100 companies' upcoming ballots                                  |
 | `/explore` | Explore: in development. The search box in the bar sends `/explore?q=…`; the page echoes the query until search exists |
+| `/season`  | Redirects permanently to `/ballot`, the view's first address                                                           |
 
-Every page has the bar (`app/components/SiteHeader.tsx`): About, This season, Explore, and search, with a `<details>` menu on phones. It works without JavaScript. Page copy lives in `app/content/`. This season and Explore wait on the site reading the database (Hyperdrive and a Cloudflare Tunnel, as the read-only `web_ro` role), which is a separate project.
+Every page has the bar (`app/components/SiteHeader.tsx`): About, Ballot, Explore, and search, with a `<details>` menu on phones. It works without JavaScript. Page copy lives in `app/content/`. This season and Explore wait on the site reading the database (Hyperdrive and a Cloudflare Tunnel, as the read-only `web_ro` role), which is a separate project.
 
 ## Commands
 
