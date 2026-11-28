@@ -52,3 +52,21 @@ test("a long query is capped at 200 characters", async ({ page }) => {
   const text = await page.getByText(/Search for/).textContent();
   expect(text?.match(/y+/)?.[0]).toHaveLength(200);
 });
+
+test("a long query without spaces doesn't scroll the page sideways", async ({
+  page,
+}) => {
+  // Final review: 200 unbroken characters pushed the page to 1705px wide.
+  await page.setViewportSize({ width: 375, height: 800 });
+  await page.goto(`/explore?q=${"y".repeat(200)}`);
+  const width = await page.evaluate(() => document.documentElement.scrollWidth);
+  expect(width).toBeLessThanOrEqual(375);
+});
+
+test("the echoed query is isolated from the surrounding text", async ({
+  page,
+}) => {
+  // A right-to-left override in the query can't reorder the sentence around it.
+  await page.goto(`/explore?q=${encodeURIComponent("water‮abc")}`);
+  await expect(page.locator("main bdi")).toHaveText("water‮abc");
+});

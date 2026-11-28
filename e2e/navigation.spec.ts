@@ -71,12 +71,31 @@ test("on a phone the links fold into a menu and nothing overflows", async ({
   expect(width).toBeLessThanOrEqual(375);
 });
 
-test("no accessibility violations on any page", async ({ page }) => {
-  for (const path of PAGES) {
-    await page.goto(path);
-    const results = await new AxeBuilder({ page })
-      .withTags(["wcag2a", "wcag2aa"])
-      .analyze();
-    expect(results.violations, path).toEqual([]);
+test("no accessibility violations on any page, at desktop and phone widths", async ({
+  page,
+}) => {
+  // Final review: the phone bar hid the logo link's name, and the 404 page had no title.
+  for (const width of [1280, 375]) {
+    await page.setViewportSize({ width, height: 800 });
+    for (const path of [...PAGES, "/no-such-page"]) {
+      await page.goto(path);
+      const results = await new AxeBuilder({ page })
+        .withTags(["wcag2a", "wcag2aa"])
+        .analyze();
+      expect(results.violations, `${path} at ${width}px`).toEqual([]);
+    }
   }
+});
+
+test("with JavaScript on, the phone menu closes after a link is chosen", async ({
+  page,
+}) => {
+  // Final review: the bar outlives client-side navigation, so <details> stayed open.
+  await page.setViewportSize({ width: 375, height: 800 });
+  await page.goto("/");
+  const menu = page.locator("details.nav-menu");
+  await menu.locator("summary").click();
+  await menu.getByRole("link", { name: "This season" }).click();
+  await expect(page).toHaveURL(/\/season$/);
+  await expect(menu).not.toHaveAttribute("open", /.*/);
 });

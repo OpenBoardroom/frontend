@@ -27,6 +27,17 @@ describe("searchQuery", () => {
     expect(read(`?q=${"x".repeat(10_000)}`)).toHaveLength(200);
   });
 
+  test("never cuts a character in half", () => {
+    // Final review: slicing UTF-16 units left a lone surrogate, which React
+    // renders differently on the server and the client.
+    const query = read(`?q=${"x".repeat(199)}${encodeURIComponent("😀")}`);
+    expect(Array.from(query)).toHaveLength(200);
+    expect(query.endsWith("😀")).toBe(true);
+    expect(read(`?q=${encodeURIComponent("😀".repeat(300))}`)).toBe(
+      "😀".repeat(200),
+    );
+  });
+
   test("leaves markup as text for the renderer to escape", () => {
     expect(read("?q=%3Cscript%3E")).toBe("<script>");
   });

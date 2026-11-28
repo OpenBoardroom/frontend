@@ -1,4 +1,5 @@
-import { Link, NavLink } from "react-router";
+import { useEffect, useRef } from "react";
+import { Link, NavLink, useLocation } from "react-router";
 import { Logo } from "~/components/Logo";
 import { NAV_LINKS, SEARCH_LABEL } from "~/content/pages";
 
@@ -24,6 +25,14 @@ function Links() {
  * a time, so assistive technology sees one set of links.
  */
 export function SiteHeader() {
+  // The bar outlives client-side navigation, so close the phone menu when the
+  // page changes. Without JavaScript every link is a full page load anyway.
+  const menu = useRef<HTMLDetailsElement>(null);
+  const { pathname, search } = useLocation();
+  // biome-ignore lint/correctness/useExhaustiveDependencies: runs on each navigation on purpose
+  useEffect(() => {
+    if (menu.current) menu.current.open = false;
+  }, [pathname, search]);
   return (
     <header className="site-header">
       <div className="site-header-inner">
@@ -35,7 +44,7 @@ export function SiteHeader() {
           <div className="nav-inline">
             <Links />
           </div>
-          <details className="nav-menu">
+          <details className="nav-menu" ref={menu}>
             <summary>Menu</summary>
             <Links />
           </details>

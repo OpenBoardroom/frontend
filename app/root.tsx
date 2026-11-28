@@ -58,6 +58,8 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
 
   return (
     <main className="page">
+      {/* React hoists this into <head>; the error page has no route meta. */}
+      <title>{`${message} · OpenBoardroom`}</title>
       <h1>{message}</h1>
       <p>{details}</p>
       {stack && (

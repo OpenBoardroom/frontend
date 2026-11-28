@@ -27,7 +27,8 @@ export default function Explore({ loaderData }: Route.ComponentProps) {
       {/* The query is untrusted: rendered as JSX text only. */}
       {loaderData.query && (
         <p className="muted">
-          Search for “{loaderData.query}” will work once Explore is ready.
+          Search for “<bdi>{loaderData.query}</bdi>” will work once Explore is
+          ready.
         </p>
       )}
     </InDevelopment>

@@ -10,9 +10,12 @@ export function canonicalUrl(path: string): string {
 
 /**
  * The search box's query: the first `q`, trimmed and capped at `MAX_QUERY`
- * characters, or "" when there is none. It is untrusted text; render it only
+ * characters (not UTF-16 units), or "" when there is none. It is untrusted text; render it only
  * as JSX text.
  */
 export function searchQuery(url: URL): string {
-  return (url.searchParams.get("q") ?? "").trim().slice(0, MAX_QUERY);
+  // Count characters, not UTF-16 units, so an emoji is never cut in half.
+  return Array.from((url.searchParams.get("q") ?? "").trim())
+    .slice(0, MAX_QUERY)
+    .join("");
 }

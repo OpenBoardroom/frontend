@@ -673,8 +673,14 @@ main {
     gap: 12px;
   }
 
+  /* Hidden visually but kept as the logo link's name for screen readers. */
   .site-brand span {
-    display: none;
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
   }
 
   .nav-inline {
@@ -725,6 +731,11 @@ main {
 }
 
 /* Same heading size as the About page's masthead. */
+/* A long query with no spaces wraps instead of widening the page. */
+.in-development p {
+  overflow-wrap: anywhere;
+}
+
 .in-development h1 {
   font-size: 1.6rem;
   line-height: 1.2;
