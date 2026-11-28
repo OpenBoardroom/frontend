@@ -2,6 +2,16 @@
 
 The public website for [OpenBoardroom](https://openboardroom.org): a React Router v7 app on Cloudflare Workers. Design and plan: see `docs/` and the [deploy spec](https://github.com/OpenBoardroom/architecture/blob/main/docs/specs/2026-11-21-frontend-deploy-and-holding-page-design.md).
 
+## Pages
+
+| Route      | What it shows                                                                                                          |
+| ---------- | ---------------------------------------------------------------------------------------------------------------------- |
+| `/`        | About: the mission, how it works, three example proposals, and the status panel (milestones and recent commits)        |
+| `/season`  | This season: in development. It will show the 2026 ballot at S&P 100 companies                                         |
+| `/explore` | Explore: in development. The search box in the bar sends `/explore?q=…`; the page echoes the query until search exists |
+
+Every page has the bar (`app/components/SiteHeader.tsx`): About, This season, Explore, and search, with a `<details>` menu on phones. It works without JavaScript. Page copy lives in `app/content/`. This season and Explore wait on the site reading the database (Hyperdrive and a Cloudflare Tunnel, as the read-only `web_ro` role), which is a separate project.
+
 ## Commands
 
 Node 24 (`.nvmrc`) and pnpm (`corepack enable`).

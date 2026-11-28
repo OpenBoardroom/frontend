@@ -1,7 +1,7 @@
 pre-commit:
   commands:
     biome:
-      run: pnpm exec biome check --staged
+      run: pnpm exec biome check --staged --no-errors-on-unmatched
     tsc:
       run: pnpm exec tsc -b
     gitleaks:

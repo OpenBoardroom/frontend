@@ -6,6 +6,7 @@ import {
   EXAMPLES_FINE_PRINT,
 } from "../app/content/examples";
 import { MILESTONES } from "../app/content/milestones";
+import { NAV_LINKS, PAGES, SEARCH_LABEL } from "../app/content/pages";
 
 function inlineText(part: Inline): string {
   return typeof part === "string" ? part : part.text;
@@ -296,5 +297,36 @@ describe("MILESTONES", () => {
       "Public site with real ballot items",
       "Phase 1 launch for the 2027 proxy season",
     ]);
+  });
+});
+
+describe("PAGES and navigation", () => {
+  test("the bar links About, This season, and Explore, in order", () => {
+    expect(NAV_LINKS).toEqual([
+      { label: "About", to: "/" },
+      { label: "This season", to: "/season" },
+      { label: "Explore", to: "/explore" },
+    ]);
+    expect(SEARCH_LABEL).toBe("Search proposals");
+  });
+
+  test("the in-development pages say what they will show", () => {
+    expect(PAGES.season).toEqual({
+      title: "This season",
+      description:
+        "An overview of the 2026 ballot at S&P 100 companies: each item, what the vote decides, who put it forward, and the board's recommendation. This view is in development.",
+    });
+    expect(PAGES.explore).toEqual({
+      title: "Explore",
+      description:
+        "Browse and search ballot items by company, topic, and who put them forward. This view is in development.",
+    });
+  });
+
+  test("the placeholder copy invents no counts", () => {
+    for (const page of Object.values(PAGES)) {
+      const numbers = page.description.match(/\d+/g) ?? [];
+      expect(numbers.every((n) => n === "2026" || n === "100")).toBe(true);
+    }
   });
 });
