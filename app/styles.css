@@ -723,3 +723,9 @@ main {
   white-space: nowrap;
   border: 0;
 }
+
+/* Same heading size as the About page's masthead. */
+.in-development h1 {
+  font-size: 1.6rem;
+  line-height: 1.2;
+}
