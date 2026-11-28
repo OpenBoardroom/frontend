@@ -1,7 +1,6 @@
 import { useEffect, useRef } from "react";
 import { useRevalidator } from "react-router";
 import { AboutSection } from "~/components/AboutSection";
-import { Logo } from "~/components/Logo";
 import { StatusPanel } from "~/components/StatusPanel";
 import { ABOUT } from "~/content/about";
 import { cloudflareContext } from "~/server/cloudflare-context";
@@ -61,7 +60,6 @@ export default function Home({ loaderData }: Route.ComponentProps) {
   return (
     <div className="page">
       <header className="masthead">
-        <Logo />
         <h1>{ABOUT.title}</h1>
       </header>
       <div className="layout">

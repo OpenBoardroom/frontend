@@ -7,6 +7,7 @@ import {
   ScrollRestoration,
 } from "react-router";
 
+import { SiteHeader } from "~/components/SiteHeader";
 import type { Route } from "./+types/root";
 import "./styles.css";
 
@@ -26,6 +27,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
+        <SiteHeader />
         {children}
         <ScrollRestoration />
         <Scripts />
